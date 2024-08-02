@@ -4,7 +4,13 @@ import requests
 from datetime import datetime
 import pytz
 from bs4 import BeautifulSoup
-from config import TOKEN, BOT_USERNAME, USERS
+
+import os
+from typing import Final
+
+TOKEN: Final = os.getenv("TOKEN")
+BOT_USERNAME: Final = os.getenv("BOT_USERNAME")
+USERS = os.getenv("USERS").split(",")
 
 # Commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
