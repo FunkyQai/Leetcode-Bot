@@ -19,7 +19,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def question_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = fetch_qod()
     formatted_data = format_qod(data)
-    await update.message.reply_text(formatted_data, disable_web_page_preview=True)
+    await update.message.reply_text(formatted_data, disable_web_page_preview=True, parse_mode='Markdown')
 
 async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
     combined_text = ""
@@ -33,7 +33,7 @@ async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             combined_text += f"User: {user}\nNo submissions for today.\n\n"
 
-    await update.message.reply_text(combined_text if combined_text else "No submissions for today.", disable_web_page_preview=True)
+    await update.message.reply_text(combined_text if combined_text else "No submissions for today.", disable_web_page_preview=True, parse_mode='Markdown')
 
 
 # Error Logging
