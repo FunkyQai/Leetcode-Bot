@@ -7,7 +7,7 @@ This is a Telegram bot that keeps users accountable by tracking daily submission
 - **Start Command**: Sends a welcome message and instructions.
 - **Question of the Day**: Fetches and displays the LeetCode Question of the Day.
 - **Daily Submissions**: Displays the daily submissions of specified users.
-- **Solved Problems": Displays the number of problems solved by each user.
+- **Solved Problems**: Displays the number of problems solved by each user.
 
 ## Setup
 
