@@ -111,7 +111,7 @@ def get_solved_problems(username):
             "Medium": data.get("mediumSolved", 0),
             "Hard": data.get("hardSolved", 0),
         }
-        return renamed_data.get("solved", [])
+        return renamed_data
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
