@@ -37,12 +37,15 @@ async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def solved(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    all_solved_problems_text = ""
     for user in USERS:
         solved_problems = get_solved_problems(user)
         solved_problems_text = f"User: {user}\n"
         for key, value in solved_problems.items():
             solved_problems_text += f"{key}: {value}\n"
-        await update.message.reply_text(solved_problems_text, disable_web_page_preview=True)
+        all_solved_problems_text += solved_problems_text + "\n"
+    
+    await update.message.reply_text(all_solved_problems_text.strip(), disable_web_page_preview=True)
 
 
 # Error Logging
