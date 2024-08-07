@@ -36,6 +36,15 @@ async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(combined_text if combined_text else "No submissions for today.", disable_web_page_preview=True, parse_mode='Markdown')
 
 
+async def solved(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    for user in USERS:
+        solved_problems = get_solved_problems(user)
+        solved_problems_text = f"User: {user}\n"
+        for key, value in solved_problems.items():
+            solved_problems_text += f"{key}: {value}\n"
+        await update.message.reply_text(solved_problems_text, disable_web_page_preview=True)
+
+
 # Error Logging
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"Update {update} caused error {context.error}")
@@ -88,6 +97,21 @@ def get_todays_submissions(submissions):
     ]
     return todays_submissions
 
+def get_solved_problems(username):
+    url = f"https://alfa-leetcode-api.onrender.com/{username}/solved"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        renamed_data = {
+            "Total Solved": data.get("solvedProblem", 0),
+            "Easy": data.get("easySolved", 0),
+            "Medium": data.get("mediumSolved", 0),
+            "Hard": data.get("hardSolved", 0),
+        }
+        return renamed_data.get("solved", [])
+    else:
+        print(f"Failed to fetch data: {response.status_code}")
+
 # Main
 if __name__ == "__main__":
     print('Starting Bot...')
@@ -97,6 +121,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("Start", start_command))
     app.add_handler(CommandHandler("QOD", question_of_the_day))
     app.add_handler(CommandHandler("Submissions", daily_submissions))
+    app.add_handler(CommandHandler("Solved", solved))
 
     # Error Logging
     app.add_error_handler(error)
