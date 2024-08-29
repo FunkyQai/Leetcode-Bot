@@ -12,6 +12,7 @@ TOKEN: Final = os.getenv("TOKEN")
 BOT_USERNAME: Final = os.getenv("BOT_USERNAME")
 USERS = os.getenv("USERS").split(",")
 
+####################################################################################################################################
 # Commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hello! Reminder to practice LeetCode daily. Use /QOD to get the Question of the Day and /Submissions to get the daily submissions.")
@@ -33,7 +34,7 @@ async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             combined_text += f"User: {user}\nNo submissions for today.\n\n"
 
-    await update.message.reply_text(combined_text if combined_text else "No submissions for today.", disable_web_page_preview=True, parse_mode='Markdown')
+    await update.message.reply_text(combined_text, disable_web_page_preview=True, parse_mode='Markdown')
 
 
 async def solved(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -48,10 +49,27 @@ async def solved(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(all_solved_problems_text.strip(), disable_web_page_preview=True)
 
 
+async def badges(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    combined_badges_text = ""
+    for user in USERS:
+        badges = get_badges(user)
+        badges_text = f"User: {user}\n"
+        if badges:
+            for badge in badges:
+                badges_text += f"{badge}\n"
+        else:
+            badges_text += "No badges yet.\n"
+        combined_badges_text += badges_text + "\n"
+
+    await update.message.reply_text(combined_badges_text.strip(), disable_web_page_preview=True)
+
+
+####################################################################################################################################
 # Error Logging
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"Update {update} caused error {context.error}")
 
+####################################################################################################################################
 # Helper Functions
 def fetch_qod():
     url = "https://alfa-leetcode-api.onrender.com/daily"
@@ -115,6 +133,17 @@ def get_solved_problems(username):
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+def get_badges(username):
+    url = f"https://alfa-leetcode-api.onrender.com/{username}/badges"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        badgelist = [badge['displayName'] for badge in data.get("badges", [])]
+        return badgelist
+    else:
+        print(f"Failed to fetch data: {response.status_code}")
+
+####################################################################################################################################
 # Main
 if __name__ == "__main__":
     print('Starting Bot...')
@@ -125,6 +154,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("QOD", question_of_the_day))
     app.add_handler(CommandHandler("Submissions", daily_submissions))
     app.add_handler(CommandHandler("Solved", solved))
+    app.add_handler(CommandHandler("Badges", badges))
 
     # Error Logging
     app.add_error_handler(error)

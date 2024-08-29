@@ -7,6 +7,8 @@ This is a Telegram bot that keeps users accountable by tracking daily submission
 - **Start Command**: Sends a welcome message and instructions.
 - **Question of the Day**: Fetches and displays the LeetCode Question of the Day.
 - **Daily Submissions**: Displays the daily submissions of specified users.
+- **Solved Problems**: Displays the number of problems solved by each user.
+- **Badges**: Displays the badges earned by each user.
 
 ## Setup
 
@@ -39,6 +41,8 @@ This is a Telegram bot that keeps users accountable by tracking daily submission
      start - Display opening message
      qod - Question of the day
      submissions - Daily submissions
+     solved - Number of problems solved by each user
+     badges - Display the badges earned by each user
      ```
      Ensure the command names match those in `main.py`
 
@@ -53,12 +57,8 @@ This is a Telegram bot that keeps users accountable by tracking daily submission
 - Use `/Start` to get a welcome message.
 - Use `/QOD` to get the LeetCode Question of the Day.
 - Use `/Submissions` to get the daily submissions of the specified users.
-
-## Commands
-
-- `/Start`: Sends a welcome message and instructions.
-- `/QOD`: Fetches and displays the LeetCode Question of the Day.
-- `/Submissions`: Displays the daily submissions of specified users.
+- Use `/Solved` to get the number of problems solved by each user (categorised by difficulty).
+- Use `/Badges` to get the badges earned by each user.
 
 ## Error Logging
 
@@ -71,3 +71,5 @@ Errors are logged to the console for debugging purposes.
 - `parse_html(html)`: Parses HTML content to plain text.
 - `get_user_submissions(username)`: Fetches the latest submissions of a user.
 - `get_todays_submissions(submissions)`: Filters submissions to get today's submissions.
+- `get_solved_problems(user)`: Fetches the number of problems solved by the user.
+- `get_badges(user)`: Fetches the name of the badges earned by the user
