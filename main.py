@@ -4,13 +4,11 @@ import requests
 from datetime import datetime
 import pytz
 from bs4 import BeautifulSoup
-
+import html
+import re
 import os
 from typing import Final
 
-TOKEN: Final = os.getenv("TOKEN")
-BOT_USERNAME: Final = os.getenv("BOT_USERNAME")
-USERS = os.getenv("USERS").split(",")
 
 ####################################################################################################################################
 # Commands
@@ -21,7 +19,10 @@ async def question_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE
     qod_data = fetch_qod()
     if qod_data:
         formatted_qod = format_qod(qod_data)
-        await update.message.reply_text(formatted_qod, disable_web_page_preview=True, parse_mode='Markdown')
+        try:
+            await update.message.reply_text(formatted_qod, disable_web_page_preview=True, parse_mode='MarkdownV2')
+        except Exception as e:
+            print(f"Failed to send message: {e}")
     else:
         await update.message.reply_text("Failed to fetch the question of the day.")
 
@@ -82,21 +83,31 @@ def fetch_qod():
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+
 def format_qod(data):
     title = data.get("questionTitle", "N/A")
     difficulty = data.get("difficulty", "N/A")
     question = parse_html(data.get("question", "N/A"))
     url = data.get("questionLink", "N/A")
 
-    formatted_string = (f"Title:   [{title}]({url})\n"
-                        f"Difficulty:   {difficulty}\n\n"
+    # Escape special characters for the title and URL
+    title = html.escape(title)
+    url = html.escape(url)
+
+    # Escape special characters in the question text
+    special_chars = r'([_*\[\]()~`>#+\-=|{}.!])'
+    question = re.sub(special_chars, r'\\\1', question)
+
+    # Format the title with Markdown
+    formatted_title = f"Title: [{title}]({url})"
+
+    # Combine the rest of the message as plain text
+    formatted_string = (f"{formatted_title}\n"
+                        f"Difficulty: {difficulty}\n\n"
                         f"Question:\n{question}\n")
-    
-    # Log the formatted string
-    print(f"Formatted QOD: {formatted_string}")
-
+      
     return formatted_string
-
+    
 def parse_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     return soup.get_text()
