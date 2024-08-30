@@ -9,6 +9,9 @@ import re
 import os
 from typing import Final
 
+TOKEN: Final = os.getenv("TOKEN")
+BOT_USERNAME: Final = os.getenv("BOT_USERNAME")
+USERS = os.getenv("USERS").split(",")
 
 ####################################################################################################################################
 # Commands
