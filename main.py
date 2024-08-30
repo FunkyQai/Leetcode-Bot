@@ -18,9 +18,12 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hello! Reminder to practice LeetCode daily. Use /QOD to get the Question of the Day and /Submissions to get the daily submissions.")
 
 async def question_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    data = fetch_qod()
-    formatted_data = format_qod(data)
-    await update.message.reply_text(formatted_data, disable_web_page_preview=True, parse_mode='Markdown')
+    qod_data = fetch_qod()
+    if qod_data:
+        formatted_qod = format_qod(qod_data)
+        await update.message.reply_text(formatted_qod, disable_web_page_preview=True, parse_mode='Markdown')
+    else:
+        await update.message.reply_text("Failed to fetch the question of the day.")
 
 async def daily_submissions(update: Update, context: ContextTypes.DEFAULT_TYPE):
     combined_text = ""
@@ -88,6 +91,10 @@ def format_qod(data):
     formatted_string = (f"Title:   [{title}]({url})\n"
                         f"Difficulty:   {difficulty}\n\n"
                         f"Question:\n{question}\n")
+    
+    # Log the formatted string
+    print(f"Formatted QOD: {formatted_string}")
+
     return formatted_string
 
 def parse_html(html):
