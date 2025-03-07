@@ -10,6 +10,14 @@ This is a Telegram bot that keeps users accountable by tracking daily submission
 - **Solved Problems**: Displays the number of problems solved by each user.
 - **Badges**: Displays the badges earned by each user.
 
+## Screenshots
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    <img src="screenshots/qod.jpg" width="150" />
+    <img src="screenshots/total_qns.jpg" width="150" />
+    <img src="screenshots/badges.jpg" width="150" />
+    <img src="screenshots/questions_today.jpg" width="150" />
+</div>
+
 ## Setup
 
 ### Prerequisites
